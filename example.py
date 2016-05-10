@@ -4,9 +4,11 @@ import boto3, prettytable, argparse
 
 parser = argparse.ArgumentParser(description='AWS Query Example.')
 parser.add_argument('-t', '--tag', required=True, help='tag')
+parser.add_argument('-r', '--region', required=True, help='region')
 args = parser.parse_args()
 
-regions = ['us-east-1', 'us-west-2', 'eu-west-1']
+regions = []
+regions.append(args.region)
 service = 'ec2'
 Tag = 'Name'
 
