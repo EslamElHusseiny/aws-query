@@ -4,15 +4,12 @@ import boto3, prettytable, argparse
 
 parser = argparse.ArgumentParser(description='AWS Query Example.')
 parser.add_argument('-t', '--tag', required=True, help='tag')
-parser.add_argument('-r', '--region', required=True, help='region')
+parser.add_argument('-r', '--regions', required=True, help='comma separated AWS regions')
 args = parser.parse_args()
 
-regions = []
-regions.append(args.region)
 service = 'ec2'
-Tag = 'Name'
-
-
+regions = args.regions.split(',')
+tag = args.tag
 
 clients = list()
 
@@ -30,7 +27,7 @@ for i in range(len(clients)):
         idx = [ i for i, tag in enumerate(instance.tags) if tag['Key'] == 'Name' ]
         if not idx:
             break
-        if  args.tag in instance.tags[idx[0]]['Value']:
+        if tag in instance.tags[idx[0]]['Value']:
             table.add_row([regions[i],instance.tags[idx[0]]['Value'],instance.private_ip_address])
 
 print(table)
