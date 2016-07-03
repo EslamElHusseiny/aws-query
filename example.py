@@ -26,7 +26,7 @@ for i in range(len(clients)):
             break
         idx = [ i for i, tag in enumerate(instance.tags) if tag['Key'] == 'Name' ]
         #f = lambda enumerated: i for i, tag in enumerated if tag['key'] == 'Name'
-        #idx = list(reduce(f , enumerate(instance.tags)))
+        #idx = list(filter(f , enumerate(instance.tags)))
         if idx:
             if tag[0] in instance.tags[idx[0]]['Value']:
                 table.add_row([regions[i],instance.tags[idx[0]]['Value'],instance.private_ip_address])
