@@ -3,7 +3,7 @@
 import boto3, prettytable, argparse
 
 parser = argparse.ArgumentParser(description='AWS Query Example.')
-parser.add_argument('-t', '--tag', required=True, help='tag')
+parser.add_argument('-t', '--tag', action='append', required=True, help='tag')
 parser.add_argument('-r', '--regions', required=True, help='comma separated AWS regions')
 args = parser.parse_args()
 
@@ -25,9 +25,12 @@ for i in range(len(clients)):
         if instance.private_ip_address is None or instance.state['Name'] != 'running':
             break
         idx = [ i for i, tag in enumerate(instance.tags) if tag['Key'] == 'Name' ]
-        if not idx:
+        #f = lambda enumerated: i for i, tag in enumerated if tag['key'] == 'Name'
+        #idx = list(reduce(f , enumerate(instance.tags)))
+        if idx:
+            if tag[0] in instance.tags[idx[0]]['Value']:
+                table.add_row([regions[i],instance.tags[idx[0]]['Value'],instance.private_ip_address])
+        else:
             continue
-        if tag in instance.tags[idx[0]]['Value']:
-            table.add_row([regions[i],instance.tags[idx[0]]['Value'],instance.private_ip_address])
 
 print(table)
